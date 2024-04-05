@@ -1,8 +1,11 @@
 %https://numpy.org/devdocs/user/numpy-for-matlab-users.html
+%note requires Image Processing Toolbox
+addpath('MATLAB')
 addpath('export')
 addpath('images')
 addpath('plots')
 addpath('text')
+addpath('csvs')
 
 format long %output decimal places same as python
 %digitsOld = digits(32); %note consider using vpa() function to increase precision e.g. vpa(pi)
@@ -52,12 +55,12 @@ while i <= length(file_list)
         results = [];
         for r = RANGES
             results = [results, mean(mean(shannon(r(1):r(2), :), 1))];
-            results = [results, nanmean(nanmean(shannon_nan(r(1):r(2), :), 1))];
+            results = [results, mean(mean(shannon_nan(r(1):r(2), :), 1,"omitnan"),"omitnan")];
         end
         results = [results, do_first_order(img), complex_before];
     
         dlmwrite(fullfile(TEXT_DIR, ['MATLAB_',file_list{i} '_shannon.txt']), mean(shannon, 1), 'precision', 8);
-        dlmwrite(fullfile(TEXT_DIR, ['MATLAB_',file_list{i} '_shannon-nan.txt']), nanmean(shannon_nan, 1), 'precision', 8);
+        dlmwrite(fullfile(TEXT_DIR, ['MATLAB_',file_list{i} '_shannon-nan.txt']), mean(shannon_nan, 1, 'omitnan'), 'precision', 8);
     
         fprintf(fid, '%s,%s\n', file_list{i}, strjoin(cellfun(@num2str, num2cell(results), 'UniformOutput', false), ','));
         i = i + 1;
@@ -110,7 +113,7 @@ function [counts, complex_before] = do_counting(filter_img, filename)
 
     [ey, ex] = find(filter_img.resp_val);
     a(sub2ind([h, w], ey, ex)) = filter_img.resp_val(sub2ind([h, w], ey, ex));
-    writematrix(a, ['MATLAB_' filename '.csv']); %specific values - zoom out on excel to see picutre in numbers
+    writematrix(a, ['csvs/MATLAB_' filename '.csv']); %specific values - zoom out on excel to see picutre in numbers
     figure(1);
 
     imshow(a, 'DisplayRange', [], 'Colormap', gray, 'Interpolation', 'nearest', 'InitialMagnification', 'fit'); %[0 max(filter_img.resp_val(:))]
