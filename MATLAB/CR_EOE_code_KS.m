@@ -19,6 +19,7 @@ IMAGE_DIR = 'images';
 PLOT_DIR = 'plots';
 TEXT_DIR = 'text';
 EXPORT_DIR = 'export';
+CSV_DIR = 'csvs';
 TIMESTAMP = datestr(now, 'yyyy.mm.dd-HHMMSS-dddd');
 
 MAX_PIXELS = 300*400;
@@ -50,8 +51,8 @@ while i <= length(file_list)
 
         img = img.run_filterbank(filter_bank);
         %writematrix(img.image_raw, ['MATLAB_imraw_' num2str(i) '.csv']); %raw image values csv
-        [counts, complex_before] = do_counting(img, file_list{i});
-        [normalized_counts, circular_mean_angle, circular_mean_length, shannon, shannon_nan] = do_statistics(counts);
+        [counts, complex_before] = do_counting(img, file_list{i}, GABOR_BINS, MAX_DIAGONAL, CIRC_BINS);
+        [normalized_counts, circular_mean_angle, circular_mean_length, shannon, shannon_nan] = do_statistics(counts,GABOR_BINS, BINS_VEC);
         results = [];
         for r = RANGES
             results = [results, mean(mean(shannon(r(1):r(2), :), 1))];
@@ -93,11 +94,7 @@ function file_list = get_file_list(directory, extension)
     file_list = {files.name};
 end
 
-function [counts, complex_before] = do_counting(filter_img, filename)
-    % Temporary solution as MATLAB doesn't like globals
-    MAX_DIAGONAL = 500;
-    GABOR_BINS = 24;
-    CIRC_BINS = 48;
+function [counts, complex_before] = do_counting(filter_img, filename, GABOR_BINS, MAX_DIAGONAL, CIRC_BINS)
     % Creates histogram (distance, relative orientation in image, relative gradient)
    
     % Cutoff minor filter responses
@@ -160,10 +157,8 @@ function H = entropy(a)
     H = -sum(a(v) .* log2(a(v)));
 end
 
-function [normalized_counts, circular_mean_angle, circular_mean_length, shannon, shannon_nan] = do_statistics(counts)
+function [normalized_counts, circular_mean_angle, circular_mean_length, shannon, shannon_nan] = do_statistics(counts,GABOR_BINS,BINS_VEC)
     % TEMP GLOBALS
-    GABOR_BINS = 24;
-    BINS_VEC = linspace(0, 2*pi, GABOR_BINS+1); BINS_VEC = BINS_VEC(1:end-1);
     BINS_VEC = permute(BINS_VEC, [1, 3, 2]); %add dimension for element-wise multiplication
     % Normalize counts by sum
     counts_sum = sum(counts, 3) + 0.00001;
@@ -197,8 +192,7 @@ function [normalized_counts, circular_mean_angle, circular_mean_length, shannon,
     end
 end
 
-function first_order = do_first_order(img)
-    GABOR_BINS = 24;
+function first_order = do_first_order(img,GABOR_BINS)
     first_order_bin = zeros(1, GABOR_BINS);
     for b = 1:GABOR_BINS
         first_order_bin(b) = sum(img.resp_val(img.resp_bin == b));
