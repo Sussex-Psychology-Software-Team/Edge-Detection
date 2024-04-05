@@ -1,29 +1,34 @@
 %https://numpy.org/devdocs/user/numpy-for-matlab-users.html
 %note requires Image Processing Toolbox
 addpath('MATLAB')
-addpath('export')
-addpath('images')
-addpath('plots')
-addpath('text')
-addpath('csvs')
 
 format long %output decimal places same as python
 %digitsOld = digits(32); %note consider using vpa() function to increase precision e.g. vpa(pi)
 
-FILTER_SIZE = 31;
-GABOR_BINS = 24;
-BINS_VEC = linspace(0, 2*pi, GABOR_BINS+1)';
-BINS_VEC = BINS_VEC(1:end-1);
-CIRC_BINS = 48;
+%Output dirs
 IMAGE_DIR = 'images';
 PLOT_DIR = 'plots';
 TEXT_DIR = 'text';
 EXPORT_DIR = 'export';
 CSV_DIR = 'csvs';
-TIMESTAMP = string(datetime("now","Format","yyyy.MM.dd-HHmmss")); %ignore warning here...
+
+addpath(IMAGE_DIR)
+addpath(PLOT_DIR)
+addpath(TEXT_DIR)
+addpath(EXPORT_DIR)
+addpath(CSV_DIR)
+
+%Global vars
+FILTER_SIZE = 31;
+GABOR_BINS = 24;
+BINS_VEC = linspace(0, 2*pi, GABOR_BINS+1)';
+BINS_VEC = BINS_VEC(1:end-1);
+CIRC_BINS = 48;
+TIMESTAMP = string(datetime("now","Format","yyyy.MM.dd-HHmmss"));
 MAX_PIXELS = 300*400;
 MAX_DIAGONAL = 500;
 MAX_TASKS = 0; % if MAX_TASKS==0, no forking
+
 
 filter_bank = filterBank(GABOR_BINS, FILTER_SIZE);
 file_list = get_file_list(IMAGE_DIR, '.png');
