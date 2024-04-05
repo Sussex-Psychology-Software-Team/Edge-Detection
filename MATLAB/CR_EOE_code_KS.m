@@ -20,8 +20,7 @@ PLOT_DIR = 'plots';
 TEXT_DIR = 'text';
 EXPORT_DIR = 'export';
 CSV_DIR = 'csvs';
-TIMESTAMP = datestr(now, 'yyyy.mm.dd-HHMMSS-dddd');
-
+TIMESTAMP = string(datetime("now","Format","yyyy.mm.dd-HHMMSS-dddd")); %ignore warning here...
 MAX_PIXELS = 300*400;
 MAX_DIAGONAL = 500;
 MAX_TASKS = 0; % if MAX_TASKS==0, no forking
@@ -34,7 +33,7 @@ for i = 1:(filter_bank.num_filters-1)
     filter_bank = filter_bank.set_flt(i, filterBank.create_gabor(FILTER_SIZE, theta, 3,i));
 end
 
-log_file = fullfile(EXPORT_DIR, ['MATLAB_export-' TIMESTAMP '.csv']);
+log_file = fullfile(EXPORT_DIR, sprintf('MATLAB_export-%s.csv',TIMESTAMP));
 
 RANGES = [20 80; 80 160; 160 240];
 result_names = char(strcat('avg-shannon',num2str(RANGES(:,1)),'-',num2str(RANGES(:,2))), strcat('avg-shannon-nan',num2str(RANGES(:,1)),'-',num2str(RANGES(:,2))),'first_order-shannon', 'edge-density');
