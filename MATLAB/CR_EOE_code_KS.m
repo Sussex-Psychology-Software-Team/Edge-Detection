@@ -50,7 +50,7 @@ while i <= length(file_list)
 
         img = img.run_filterbank(filter_bank);
         %writematrix(img.image_raw, ['MATLAB_imraw_' num2str(i) '.csv']); %raw image values csv
-        [counts, complex_before] = do_counting(img, file_list{i}, GABOR_BINS, MAX_DIAGONAL, CIRC_BINS);
+        [counts, complex_before] = do_counting(img, file_list{i}, GABOR_BINS, MAX_DIAGONAL, CIRC_BINS, CSV_DIR, PLOT_DIR);
         [normalized_counts, circular_mean_angle, circular_mean_length, shannon, shannon_nan] = do_statistics(counts,GABOR_BINS, BINS_VEC);
         results = [];
         for r = RANGES
@@ -93,7 +93,7 @@ function file_list = get_file_list(directory, extension)
     file_list = {files.name};
 end
 
-function [counts, complex_before] = do_counting(filter_img, filename, GABOR_BINS, MAX_DIAGONAL, CIRC_BINS)
+function [counts, complex_before] = do_counting(filter_img, filename, GABOR_BINS, MAX_DIAGONAL, CIRC_BINS, CSV_DIR, PLOT_DIR)
     % Creates histogram (distance, relative orientation in image, relative gradient)
    
     % Cutoff minor filter responses
@@ -109,12 +109,12 @@ function [counts, complex_before] = do_counting(filter_img, filename, GABOR_BINS
 
     [ey, ex] = find(filter_img.resp_val);
     a(sub2ind([h, w], ey, ex)) = filter_img.resp_val(sub2ind([h, w], ey, ex));
-    writematrix(a, ['csvs/MATLAB_' filename '.csv']); %specific values - zoom out on excel to see picutre in numbers
+    writematrix(a, fullfile(CSV_DIR, ['MATLAB_' filename '.csv'])); %specific values - zoom out on excel to see picutre in numbers
     figure(1);
 
     imshow(a, 'DisplayRange', [], 'Colormap', gray, 'Interpolation', 'nearest', 'InitialMagnification', 'fit'); %[0 max(filter_img.resp_val(:))]
     title(['MATLAB_edges_', filename]);
-    saveas(gcf, fullfile('plots', ['MATLAB_edges_', filename]), 'png');
+    saveas(gcf, fullfile(PLOT_DIR, ['MATLAB_edges_', filename]), 'png');
     close(gcf);
 
     % Lookup tables to speed up calculations
