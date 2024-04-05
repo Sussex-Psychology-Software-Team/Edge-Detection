@@ -32,14 +32,6 @@ classdef filterBank
     end
 
     methods(Static)
-        function gaussian = create_gaussian(size, sigma) %note: not currently in use
-            valsy = linspace(-size/2+1, size/2, size);
-            valsx = linspace(-size/2+1, size/2, size);
-            [xgr, ygr] = meshgrid(valsx, valsy);
-            gaussian = exp(-(xgr.^2 + ygr.^2)/(2*sigma^2));
-            gaussian = gaussian/sum(gaussian(:));
-        end
-
         function gabor = create_gabor(size, theta, octave,i)
             amplitude = 1.0;
             phase = pi/2.0;
