@@ -57,7 +57,7 @@ while i <= length(file_list)
             results = [results, mean(mean(shannon(r(1):r(2), :), 1))];
             results = [results, mean(mean(shannon_nan(r(1):r(2), :), 1,"omitnan"),"omitnan")];
         end
-        results = [results, do_first_order(img), complex_before];
+        results = [results, do_first_order(img, GABOR_BINS), complex_before];
     
         dlmwrite(fullfile(TEXT_DIR, ['MATLAB_',file_list{i} '_shannon.txt']), mean(shannon, 1), 'precision', 8);
         dlmwrite(fullfile(TEXT_DIR, ['MATLAB_',file_list{i} '_shannon-nan.txt']), mean(shannon_nan, 1, 'omitnan'), 'precision', 8);
@@ -157,8 +157,7 @@ function H = entropy(a)
 end
 
 function [normalized_counts, circular_mean_angle, circular_mean_length, shannon, shannon_nan] = do_statistics(counts,GABOR_BINS,BINS_VEC)
-    % TEMP GLOBALS
-    BINS_VEC = permute(BINS_VEC, [1, 3, 2]); %add dimension for element-wise multiplication
+    BINS_VEC = permute(BINS_VEC, [2, 3, 1]); %add dimension for element-wise multiplication
     % Normalize counts by sum
     counts_sum = sum(counts, 3) + 0.00001;
     normalized_counts = counts ./ repmat(counts_sum, [1, 1, size(counts, 3)]);
@@ -191,7 +190,7 @@ function [normalized_counts, circular_mean_angle, circular_mean_length, shannon,
     end
 end
 
-function first_order = do_first_order(img,GABOR_BINS)
+function first_order = do_first_order(img, GABOR_BINS)
     first_order_bin = zeros(1, GABOR_BINS);
     for b = 1:GABOR_BINS
         first_order_bin(b) = sum(img.resp_val(img.resp_bin == b));
