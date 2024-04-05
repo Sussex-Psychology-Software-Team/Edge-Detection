@@ -1,2 +1,2 @@
 # Edge-Detection
-Translation of existing MATLAB edge-detection code to Python
+Translation of existing Python edge-detection code to MATLAB
