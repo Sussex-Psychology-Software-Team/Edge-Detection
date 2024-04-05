@@ -20,7 +20,7 @@ PLOT_DIR = 'plots';
 TEXT_DIR = 'text';
 EXPORT_DIR = 'export';
 CSV_DIR = 'csvs';
-TIMESTAMP = string(datetime("now","Format","yyyy.mm.dd-HHMMSS-dddd")); %ignore warning here...
+TIMESTAMP = string(datetime("now","Format","yyyy.MM.dd-HHmmss")); %ignore warning here...
 MAX_PIXELS = 300*400;
 MAX_DIAGONAL = 500;
 MAX_TASKS = 0; % if MAX_TASKS==0, no forking
