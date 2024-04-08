@@ -1,0 +1,5 @@
+# make sure you are in your project's root folder
+conda create --name edge-detection matplotlib scikit-image
+conda activate edge-detection
+# to run a the script:
+python python/CR_EOE_code_KS.py
