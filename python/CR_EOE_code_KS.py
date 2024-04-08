@@ -153,7 +153,7 @@ def do_counting(filter_img, filename):
     # visualize remaining responses
     a = np.zeros_like(filter_img.resp_val)
     a[ey,ex] = filter_img.resp_val[ey,ex]
-    np.savetxt(f'py_{filename}.csv', a, delimiter=',') #SAVES PIXEL VALUES AS CSV
+    np.savetxt(f'csvs/py_{filename}.csv', a, delimiter=',') #SAVES PIXEL VALUES AS CSV
     plt.figure(1), plt.title('edges_'+filename), plt.imshow(a, cmap='gray', interpolation='nearest')
     plt.savefig(os.path.join(PLOT_DIR,'edges_'+filename), bbox_inches='tight')
     plt.close()
