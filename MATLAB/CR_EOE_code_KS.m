@@ -40,7 +40,7 @@ end
 
 log_file = fullfile(EXPORT_DIR, sprintf('MATLAB_export-%s.csv',TIMESTAMP));
 
-RANGES = [20 80; 80 160; 160 240];
+RANGES = [20 80; 80 160; 160 240]';
 result_names = char(strcat('avg-shannon',num2str(RANGES(:,1)),'-',num2str(RANGES(:,2))), strcat('avg-shannon-nan',num2str(RANGES(:,1)),'-',num2str(RANGES(:,2))),'first_order-shannon', 'edge-density');
 
 fid = fopen(log_file, 'w');
